@@ -1,1 +1,1 @@
-# Human-Activity-Recognition-with-Recurrent-Neural-Networks-on-IoT-Device
+# Human Activity Recognition with Recurrent Neural Networks on IoT Device
