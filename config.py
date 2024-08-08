@@ -1,5 +1,4 @@
 # This is the config file which holds the configuration values for different architectures
-# Configrations for different architectures explained below:
 
 # Baseline LSTM Architecture:
 LSTM1 = {

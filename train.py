@@ -9,10 +9,8 @@ import config as cfg
 batch_size = cfg.batch_size
 
 def train(net, X_train, y_train, X_test, y_test, opt, criterion, epochs=100, clip_val=15):
-    print("\n\n********** Running training! ************\n\n")
-
+    print("\n\n********** Running training ************\n\n")
     sched = getLRScheduler(optimizer=opt)
-    #if (train_on_gpu):
     if (torch.cuda.is_available() ):
         net.cuda()
 
@@ -45,11 +43,9 @@ def train(net, X_train, y_train, X_test, y_test, opt, criterion, epochs=100, cli
 
         while step * batch_size <= train_len:
             batch_xs = extract_batch_size(X_train, step, batch_size)
-            # batch_ys = one_hot_vector(extract_batch_size(y_train, step, batch_size))
             batch_ys = extract_batch_size(y_train, step, batch_size)
 
             inputs, targets = torch.from_numpy(batch_xs), torch.from_numpy(batch_ys.flatten('F'))
-            #if (train_on_gpu):
             if (torch.cuda.is_available() ):
                 inputs, targets = inputs.cuda(), targets.cuda()
 
@@ -57,7 +53,6 @@ def train(net, X_train, y_train, X_test, y_test, opt, criterion, epochs=100, cli
             opt.zero_grad()
 
             output = net(inputs.float(), h)
-            # print("lenght of inputs is {} and target value is {}".format(inputs.size(), targets.size()))
             train_loss = criterion(output, targets.long())
             train_losses.append(train_loss.item())
 
@@ -91,7 +86,7 @@ def train(net, X_train, y_train, X_test, y_test, opt, criterion, epochs=100, cli
                   "Test accuracy: {:.4f}...".format(test_accuracy),
                   "Test F1: {:.4f}...".format(test_f1score))
 
-    print('!!! Best accuracy is : {} !!!'.format(best_accuracy))
+    print('********** Best accuracy is : {} **********'.format(best_accuracy))
     params['best_model'] = best_model
     params['train_loss'] = epoch_train_losses
     params['test_loss'] = epoch_test_losses

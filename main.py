@@ -26,7 +26,6 @@ clip_val = cfg.clip_val
 diag = cfg.diag
 
 # Training
-# check if GPU is available
 if (torch.cuda.is_available() ):
     print('Training on GPU')
     train_on_gpu = torch.cuda.is_available()

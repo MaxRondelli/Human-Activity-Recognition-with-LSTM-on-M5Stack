@@ -1,4 +1,3 @@
-# Useful Constants
 # Those are separate normalised input features for the neural network
 INPUT_SIGNAL_TYPES = [
     "body_acc_x_",

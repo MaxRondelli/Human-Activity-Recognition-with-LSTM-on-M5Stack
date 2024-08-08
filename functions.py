@@ -75,6 +75,7 @@ def getLRScheduler(optimizer):
     #schedular = lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
     return schedular
 
+# Plot function for accuracy and loss
 def plot(x_arg, param_train, param_test, label, lr, run_dir):
     plt.figure()
     plt.plot(x_arg, param_train, color='blue', label='train')
