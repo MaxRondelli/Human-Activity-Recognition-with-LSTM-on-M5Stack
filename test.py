@@ -20,24 +20,18 @@ def test(net, X_test, y_test, criterion, best_accuracy, best_model, test_batch=6
         batch_ys = extract_batch_size(y_test, step, test_batch)
 
         inputs, targets = torch.from_numpy(batch_xs), torch.from_numpy(batch_ys.flatten('F'))
-        #if (train_on_gpu):
+
         if (torch.cuda.is_available() ):
             inputs, targets = inputs.cuda(), targets.cuda()
 
         test_h = tuple([each.data for each in test_h])
-        #print("Size of inputs is: {}".format(X_test.shape))
         output = net(inputs.float(), test_h)
         test_loss = criterion(output, targets.long())
         test_losses.append(test_loss.item())
 
         top_p, top_class = output.topk(1, dim=1)
         equals = top_class == targets.view(*top_class.shape).long()
-        #print("\nDebugging here")
-        #print(top_class.shape)
-        #print(output.shape)
-        #print(test_batch)
         test_accuracy += torch.mean(equals.type(torch.FloatTensor))
-        #print(test_accuracy)
         test_f1score += metrics.f1_score(top_class.cpu(), targets.view(*top_class.shape).long().cpu(), average='macro')
         step += 1
 

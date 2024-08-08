@@ -4,9 +4,11 @@ from train import train
 from torch import nn
 from model import LSTMModel, init_weights
 from functions import plot, evaluate, load_X, load_y
+from datetime import datetime
 import config as cfg
 import data as df
 import sys
+import os
 
 # Data file to load X and y values
 X_train_signals_paths = df.X_train_signals_paths
@@ -31,6 +33,9 @@ if (torch.cuda.is_available() ):
 else:
     print('GPU not available! Training on CPU. Try to keep n_epochs very small')
 
+# Create a 'results' directory if it doesn't exist
+results_dir = '/home/massimorondelli/Human-Activity-Recognition-with-Recurrent-Neural-Networks-on-IoT-Device/results'
+os.makedirs(results_dir, exist_ok=True)
 
 def main():
     X_train = load_X(X_train_signals_paths)
@@ -39,11 +44,10 @@ def main():
     y_test = load_y(y_test_path)
 
     # Input Data
-    training_data_count = len(X_train)  # 7352 training series (with 50% overlap between each serie)
-    test_data_count = len(X_test)  # 2947 testing series
-    n_steps = len(X_train[0])  # 128 timesteps per series
-    n_input = len(X_train[0][0])  # 9 input parameters per timestep
-
+    training_data_count = len(X_train)
+    test_data_count = len(X_test)
+    n_steps = len(X_train[0])
+    n_input = len(X_train[0][0])
 
     # Info
     print("Some useful info to get an insight on dataset's shape and normalisation:")
@@ -60,14 +64,29 @@ def main():
             sys.exit()
         net.apply(init_weights)
         print(diag)
+
+        # Hyperparam
         opt = torch.optim.Adam(net.parameters(), lr=lr)
         criterion = nn.CrossEntropyLoss()
         net = net.float()
-        params = train(net, X_train, y_train, X_test, y_test, opt=opt, criterion=criterion, epochs=epochs, clip_val=clip_val)
-        evaluate(params['best_model'], X_test, y_test, criterion)
-        plot(params['epochs'], params['train_loss'], params['test_loss'], 'loss', lr)
-        plot(params['epochs'], params['train_accuracy'], params['test_accuracy'], 'accuracy', lr)
 
-        #plot(params['lr'], params['train_loss'], params['test_loss'], 'loss_lr', lr)
+        # Create a directory for the current run with timestamp
+        run_timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        run_dir = os.path.join(results_dir, f'run_{run_timestamp}')
+        os.makedirs(run_dir, exist_ok=True)
+        models_dir = os.path.join(run_dir, 'models')
+        os.makedirs(models_dir, exist_ok=True)
+
+        # Start training and eval
+        params = train(net, X_train, y_train, X_test, y_test, opt=opt, criterion=criterion, epochs=epochs, clip_val=clip_val)
+        evaluate(params['best_model'], X_test, y_test, criterion, run_dir)
+
+        # Save the best and last models
+        torch.save(params['best_model'].state_dict(), os.path.join(models_dir, 'best.pth'))
+        torch.save(net.state_dict(), os.path.join(models_dir, 'last.pth'))
+
+        # Save the plots
+        plot(params['epochs'], params['train_loss'], params['test_loss'], 'loss', lr, run_dir)
+        plot(params['epochs'], params['train_accuracy'], params['test_accuracy'], 'accuracy', lr, run_dir)
 
 main()

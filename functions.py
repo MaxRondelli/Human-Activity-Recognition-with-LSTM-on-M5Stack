@@ -5,6 +5,8 @@ import config as cfg
 import sklearn.metrics as metrics
 import matplotlib.pyplot as plt
 import data as df
+import os 
+from datetime import datetime
 
 LABELS = df.LABELS
 n_classes = cfg.n_classes
@@ -24,7 +26,7 @@ def extract_batch_size(_train, step, batch_size):
 
     return batch
 
-# Load "X" (the neural network's training and testing inputs)
+# Load "X" - the neural network's training and testing inputs
 def load_X(X_signals_paths):
     X_signals = []
 
@@ -40,7 +42,7 @@ def load_X(X_signals_paths):
 
     return np.transpose(np.array(X_signals), (1, 2, 0))
 
-# Load "y" (the neural network's training and testing outputs)
+# Load "y" - the neural network's training and testing outputs
 def load_y(y_path):
     file = open(y_path, 'r')
     # Read dataset from disk, dealing with text file's syntax
@@ -73,31 +75,31 @@ def getLRScheduler(optimizer):
     #schedular = lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
     return schedular
 
-def plot(x_arg, param_train, param_test, label, lr):
+def plot(x_arg, param_train, param_test, label, lr, run_dir):
     plt.figure()
     plt.plot(x_arg, param_train, color='blue', label='train')
     plt.plot(x_arg, param_test, color='red', label='test')
     plt.legend()
-    if (label == 'accuracy'):
+    if label == 'accuracy':
         plt.xlabel('Epoch', fontsize=14)
         plt.ylabel('Accuracy (%)', fontsize=14)
         plt.title('Training and Test Accuracy', fontsize=20)
-        plt.savefig('Accuracy_' + str(epochs) + str(lr) + '.png')
+        plt.savefig(os.path.join(run_dir, f'Accuracy_epochs_{str(epochs)}_lr{str(lr)}.png'))
         plt.show()
-    elif (label == 'loss'):
+    elif label == 'loss':
         plt.xlabel('Epoch', fontsize=14)
         plt.ylabel('Loss', fontsize=14)
         plt.title('Training and Test Loss', fontsize=20)
-        plt.savefig('Loss_' + str(epochs) + str(lr) + '.png')
+        plt.savefig(os.path.join(run_dir, f'Loss_epochs_{str(epochs)}_lr{str(lr)}.png'))
         plt.show()
     else:
         plt.xlabel('Learning rate', fontsize=14)
         plt.ylabel('Loss', fontsize=14)
         plt.title('Training loss and Test loss with learning rate', fontsize=20)
-        plt.savefig('Loss_lr_' + str(epochs) + str(lr) + '.png')
+        plt.savefig(os.path.join(run_dir, f'Loss_lr_{str(epochs)}{str(lr)}.png'))
         plt.show()
 
-def evaluate(net, X_test, y_test, criterion):
+def evaluate(net, X_test, y_test, criterion, run_dir):
     test_batch = len(X_test)
     net.eval()
     test_h = net.init_hidden(test_batch)
@@ -127,9 +129,9 @@ def evaluate(net, X_test, y_test, criterion):
     print("---------Confusion Matrix--------")
     print(confusion_matrix)
     normalized_confusion_matrix = np.array(confusion_matrix, dtype=np.float32)/np.sum(confusion_matrix)*100
-    plotConfusionMatrix(normalized_confusion_matrix)
+    plotConfusionMatrix(normalized_confusion_matrix, run_dir)
 
-def plotConfusionMatrix(normalized_confusion_matrix):
+def plotConfusionMatrix(normalized_confusion_matrix, run_dir):
     plt.figure()
     plt.imshow(
         normalized_confusion_matrix,
@@ -144,6 +146,5 @@ def plotConfusionMatrix(normalized_confusion_matrix):
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-    plt.savefig("confusion_matrix.png")
+    plt.savefig(os.path.join(run_dir, "confusion_matrix.png"))
     plt.show()
-
