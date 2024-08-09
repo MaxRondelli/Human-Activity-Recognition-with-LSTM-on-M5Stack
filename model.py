@@ -30,17 +30,27 @@ class LSTMModel(nn.Module):
         self.fc = nn.Linear(n_hidden, n_classes)
         self.dropout = nn.Dropout(drop_prob)
 
-    def forward(self, x, hidden):
-        x = x.permute(1, 0, 2)
+    def forward(self, x, hidden=None):
+        # Initialize hidden state if not provided
+        if hidden is None:
+            h_0 = torch.zeros(self.n_layers, x.size(1), self.n_hidden).to(x.device)
+            c_0 = torch.zeros(self.n_layers, x.size(1), self.n_hidden).to(x.device)
+            hidden = (h_0, c_0)
+
+        x = x.permute(1, 0, 2)  # Permute for the LSTM
+
+        # First LSTM layer
         x, hidden1 = self.lstm1(x, hidden)
-        for i in range(n_highway_layers):
-            #x = F.relu(x)
+
+        # Additional LSTM layers (if any)
+        for i in range(n_highway_layers):  # n_highway_layers should be defined in your class or passed to it
             x, hidden2 = self.lstm2(x, hidden)
+
         x = self.dropout(x)
         out = x[-1]
         out = out.contiguous().view(-1, self.n_hidden)
         out = self.fc(out)
-        out = F.log_softmax(out, 1)
+        out = F.log_softmax(out, dim=1)
 
         return out
 

@@ -11,21 +11,21 @@ import sys
 import os
 
 # Data file to load X and y values
-X_train_signals_paths = df.X_train_signals_paths
-X_test_signals_paths = df.X_test_signals_paths
-y_train_path = df.y_train_path
 y_test_path = df.y_test_path
+y_train_path = df.y_train_path
+X_test_signals_paths = df.X_test_signals_paths
+X_train_signals_paths = df.X_train_signals_paths
 
 # LSTM Neural Network's internal structure
-n_hidden = cfg.n_hidden
-n_classes = cfg.n_classes
-epochs = cfg.n_epochs
-learning_rate = cfg.learning_rate
-weight_decay = cfg.weight_decay
-clip_val = cfg.clip_val
 diag = cfg.diag
+epochs = cfg.n_epochs
+n_hidden = cfg.n_hidden
+clip_val = cfg.clip_val
+n_classes = cfg.n_classes
+weight_decay = cfg.weight_decay
+learning_rate = cfg.learning_rate
 
-# Training
+# Training on gpu
 if (torch.cuda.is_available() ):
     print('Training on GPU')
     train_on_gpu = torch.cuda.is_available()

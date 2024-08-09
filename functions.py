@@ -9,10 +9,10 @@ import os
 from datetime import datetime
 
 LABELS = df.LABELS
+epochs = cfg.n_epochs
 n_classes = cfg.n_classes
 n_epochs_hold = cfg.n_epochs_hold
 n_epochs_decay = cfg.batch_size - n_epochs_hold
-epochs = cfg.n_epochs
 
 # Define function to generate batches of a particular size
 def extract_batch_size(_train, step, batch_size):
@@ -120,7 +120,6 @@ def evaluate(net, X_test, y_test, criterion, run_dir):
 
     test_accuracy = torch.mean(equals.type(torch.FloatTensor))
     test_f1score = metrics.f1_score(top_class, targets, average='macro')
-
 
     print("Final loss is: {}".format(test_loss.item()))
     print("Final accuracy is: {}". format(test_accuracy))
