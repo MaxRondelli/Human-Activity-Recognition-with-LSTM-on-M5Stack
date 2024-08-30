@@ -1,8 +1,8 @@
-import torch
-import config as cfg
-import ai_edge_torch
-from model import LSTMModel
 import os 
+import torch
+import ai_edge_torch
+import config as cfg
+from model import LSTMModel
 
 os.environ['PJRT_DEVICE'] = 'CPU'
 
