@@ -144,20 +144,34 @@ void loop() {
     return;
   }
 
-  // Find the index of the maximum output
   int maxIndex = 0;
   float maxValue = tflOutputTensor->data.f[0];
-  for (int i = 1; i < NUM_LABELS; i++) {
-    if (tflOutputTensor->data.f[i] > maxValue) {
+  float sum = 0.0f;
+  float minValue = tflOutputTensor->data.f[0];
+
+  for (int i = 0; i < NUM_LABELS; i++) {
+    float value = tflOutputTensor->data.f[i];
+    sum += value;
+    if (value > maxValue) {
       maxIndex = i;
-      maxValue = tflOutputTensor->data.f[i];
+      maxValue = value;
+    }
+    if (value < minValue) {
+      minValue = value;
     }
   }
 
-  // Convert to percentage
-  float confidence = maxValue * 100;
+  // confidence
+  float confidence;
+  if (sum == 0 || maxValue == minValue) {
+    confidence = 0.0f;
+  } else if (sum < 1e-6) {
+    confidence = ((maxValue - minValue) / (sum - NUM_LABELS * minValue)) * 100.0f;
+  } else {
+    confidence = (maxValue / sum) * 100.0f;
+  }
+  confidence = std::max(0.0f, std::min(100.0f, confidence));
 
-  // Display the result
   M5.Lcd.fillScreen(BLACK);
   M5.Lcd.setTextSize(2);
   M5.Lcd.setCursor(0, 0);
