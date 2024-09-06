@@ -1,5 +1,5 @@
 # Human Activity Recognition with LSTM on M5Stack
-This project implements human activity recognition using a Long Short-Term Memory (LSTM) neural network on an M5Stack Gray device. The model is trained on the UCI Human Activity Recognition dataset and deployed on the M5Stack for real-time inference using its built-in IMU sensor.
+This project implements Human Activity Recognition (HAR) using a Long Short-Term Memory (LSTM) neural network on an M5Stack Gray device. The model is trained on the UCI Human Activity Recognition dataset and deployed on the M5Stack for real-time inference using its built-in IMU sensor.
 
 ## Installation 
 1. Clone this repository:
