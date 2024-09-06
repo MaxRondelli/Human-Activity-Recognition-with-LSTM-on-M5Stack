@@ -33,7 +33,7 @@ else:
     print('GPU not available! Training on CPU. Try to keep n_epochs very small')
 
 # Create a 'results' directory if it doesn't exist
-results_dir = '/home/massimorondelli/Human-Activity-Recognition-with-Recurrent-Neural-Networks-on-IoT-Device/results'
+results_dir = 'results'
 os.makedirs(results_dir, exist_ok=True)
 
 def main():

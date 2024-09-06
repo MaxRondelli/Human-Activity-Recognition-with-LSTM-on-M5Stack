@@ -6,7 +6,7 @@ from model import LSTMModel
 
 os.environ['PJRT_DEVICE'] = 'CPU'
 
-BEST_MODEL = '/home/massimorondelli/Human-Activity-Recognition-with-Recurrent-Neural-Networks-on-IoT-Device/results/run_20240808_120746/models/best.pth'
+BEST_MODEL = 'path_to_your_best_model'
 INPUT_SIZE = cfg.n_input
 HIDDEN_SIZE = cfg.n_hidden
 NUM_LAYERS = cfg.n_layers
