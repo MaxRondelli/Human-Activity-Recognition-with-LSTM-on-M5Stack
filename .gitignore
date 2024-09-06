@@ -1,4 +1,3 @@
 __pycache__
-results
+results/run_20240808_120746/models
 edge_model.tflite
-pics
