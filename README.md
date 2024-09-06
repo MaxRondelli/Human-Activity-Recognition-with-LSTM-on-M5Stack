@@ -49,3 +49,10 @@ const unsigned char edge_model_tflite[] = { model_inside_the_brackets }
 const unsigned int edge_model_tflite_len = 70912;
 ```
 7. To run the inference on M5Stack, move the `edge_model.h` inside the same folder where the `.ino` file is. Include the model inside the file and run the code. 
+
+## Performance
+Model's performance on the left and M5Stack inference on the right.
+<div align="center">
+  <img src="https://github.com/MaxRondelli/Human-Activity-Recognition-with-LSTM-on-M5Stack/blob/main/results/run_20240808_120746/confusion_matrix.png?raw=True" height="300px" alt="Model's Confusion Matrix">
+  <img src="https://github.com/MaxRondelli/Human-Activity-Recognition-with-LSTM-on-M5Stack/blob/main/results/run_20240808_120746/inference-pic.jpeg" height="300px" alt="M5Stack Inference">
+</div>
