@@ -2,3 +2,4 @@ __pycache__
 results
 edge_model.tflite
 Arduino/edge_model.h
+pics
